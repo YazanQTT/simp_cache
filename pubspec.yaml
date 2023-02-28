@@ -1,7 +1,7 @@
 name: simp_cache
-description: A new Flutter project.
+description: Simple & easy package to cache and retrieve objects as JSON files.
 version: 0.0.1
-homepage:
+homepage: https://github.com/YazanQTT/simp_cache
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
