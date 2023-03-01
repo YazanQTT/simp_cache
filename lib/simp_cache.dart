@@ -14,10 +14,12 @@ class SimpCache {
 
   ///This method caches item in SharedPreferences and returns a boolean to indicate success or failure.
   Future<bool> cacheItem(String key, Object value) async {
-    final EncryptedSharedPreferences _encryptedSharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences _encryptedSharedPreferences =
+        EncryptedSharedPreferences();
     final _secured = await _encryptedSharedPreferences.getInstance();
     _cachedItems[key] = jsonEncode(value);
-    return _secured.setString(SimpCacheConstants.items, jsonEncode(_cachedItems));
+    return _secured.setString(
+        SimpCacheConstants.items, jsonEncode(_cachedItems));
   }
 
   ///This method is Future and returns a cached item if it exists.
@@ -28,19 +30,21 @@ class SimpCache {
 
   ///This method removes items from Ram & SharedPreferences and returns a boolean to indicate success or failure.
   Future<bool> removeItemByKey(String key) async {
-    final EncryptedSharedPreferences _encryptedSharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences _encryptedSharedPreferences =
+        EncryptedSharedPreferences();
     final _secured = await _encryptedSharedPreferences.getInstance();
     await _getCachedItems();
     _cachedItems.remove(key);
-    return _secured.setString(SimpCacheConstants.items, jsonEncode(_cachedItems));
+    return _secured.setString(
+        SimpCacheConstants.items, jsonEncode(_cachedItems));
   }
 
   ///This method prints all cached items (in debug mode only).
   Future<void> showCachedItems({bool showSource = false}) async {
     await _getCachedItems(showSource: showSource);
     _cachedItems.forEach((key, value) {
-      if(kDebugMode) {
-       debugPrint('$key - $value');
+      if (kDebugMode) {
+        debugPrint('$key - $value');
       }
     });
   }
@@ -54,34 +58,35 @@ class SimpCache {
   Future<bool> clearCache() async {
     _cachedItems = {};
 
-    final EncryptedSharedPreferences _encryptedSharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences _encryptedSharedPreferences =
+        EncryptedSharedPreferences();
     final _secured = await _encryptedSharedPreferences.getInstance();
     return _secured.remove(SimpCacheConstants.items);
   }
 
   /// ---------------- \\\
 
-  Future<Map<String, dynamic>?> _getCachedItems({bool showSource = false}) async {
-    final EncryptedSharedPreferences _encryptedSharedPreferences = EncryptedSharedPreferences();
+  Future<Map<String, dynamic>?> _getCachedItems(
+      {bool showSource = false}) async {
+    final EncryptedSharedPreferences _encryptedSharedPreferences =
+        EncryptedSharedPreferences();
     final _secured = await _encryptedSharedPreferences.getInstance();
 
     try {
       if (_cachedItems.isNotEmpty) {
-        if(showSource && kDebugMode) {
+        if (showSource && kDebugMode) {
           debugPrint('SimpCache from RAM');
         }
         return _cachedItems;
-      }
-      else if (_secured.containsKey(SimpCacheConstants.items)) {
-        if(showSource && kDebugMode) {
+      } else if (_secured.containsKey(SimpCacheConstants.items)) {
+        if (showSource && kDebugMode) {
           debugPrint('SimpCache from SharedPreferences');
         }
         _cachedItems = await _getItemsFromDeviceStorage();
         _secured.setString(SimpCacheConstants.items, jsonEncode(_cachedItems));
 
         return _cachedItems;
-      }
-      else {
+      } else {
         return null;
       }
     } catch (error) {
@@ -91,9 +96,10 @@ class SimpCache {
   }
 
   Future<Map<String, dynamic>> _getItemsFromDeviceStorage() async {
-    final EncryptedSharedPreferences _encryptedSharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences _encryptedSharedPreferences =
+        EncryptedSharedPreferences();
     final _secured = await _encryptedSharedPreferences.getInstance();
-    final value = await _secured.getString(SimpCacheConstants.items) ?? '';
+    final value = _secured.getString(SimpCacheConstants.items) ?? '';
 
     return jsonDecode(value);
   }
